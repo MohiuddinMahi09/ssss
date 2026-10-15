@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>সুবাক্য - Subakya</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Bengali -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandDark: '#082029',
+                        brandMedium: '#0d383b',
+                        brandLight: '#144c50',
+                        mintCard: '#98cfbd',
+                        mintDark: '#7fbaa7',
+                        textDark: '#092528',
+                    },
+                    fontFamily: {
+                        bengali: ['"Hind Siliguri"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+
+        /* Custom scrollbar for text area */
+        textarea::-webkit-scrollbar {
+            width: 8px;
+        }
+        textarea::-webkit-scrollbar-track {
+            background: rgba(9, 37, 40, 0.05);
+            border-radius: 8px;
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background: rgba(9, 37, 40, 0.25);
+            border-radius: 8px;
+        }
+        textarea::-webkit-scrollbar-thumb:hover {
+            background: rgba(9, 37, 40, 0.4);
+        }
+
+        /* Glassmorphism utility */
+        .glass-btn {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .glass-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        /* Animation Keyframes */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.25s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-[#082029] via-[#0b2f33] to-[#0d383b] text-white min-h-screen flex flex-col justify-between select-none antialiased">
+
+    <!-- TOP HEADER -->
+    <header class="w-full px-6 py-4 flex items-center justify-between border-b border-white/10 bg-[#082029]/70 backdrop-blur-md sticky top-0 z-40">
+        <!-- Logo / Brand -->
+        <div class="flex flex-col cursor-pointer" onclick="openToast('সুবাক্য - বাংলা লিখন ও সম্পাদনা প্ল্যাটফর্ম')">
+            <h1 class="text-2xl md:text-3xl font-bold tracking-wide text-white leading-tight drop-shadow">সুবাক্য</h1>
+            <span class="text-xs text-[#98cfbd] font-light tracking-wider opacity-90">সুবাক্য</span>
+        </div>
+
+        <!-- Right Header Action Icons -->
+        <div class="flex items-center space-x-3">
+            <!-- Profile Button -->
+            <button onclick="toggleModal('profileModal')" 
+                    class="glass-btn w-10 h-10 rounded-lg text-[#98cfbd] hover:text-white flex items-center justify-center transition-all duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#98cfbd]"
+                    title="প্রোফাইল">
+                <i class="fa-solid fa-user text-base"></i>
+            </button>
+            <!-- Settings Button -->
+            <button onclick="toggleModal('settingsModal')" 
+                    class="glass-btn w-10 h-10 rounded-lg text-[#98cfbd] hover:text-white flex items-center justify-center transition-all duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#98cfbd]"
+                    title="সেটিংস">
+                <i class="fa-solid fa-gear text-base"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN EDITOR AREA -->
+    <main class="flex-grow flex items-center justify-center px-4 sm:px-6 md:px-12 py-6 my-auto">
+        <div class="w-full max-w-5xl h-[72vh] md:h-[68vh] bg-[#98cfbd] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-[#80b8a7] relative transition-all duration-300">
+            
+            <!-- Editor Top Utility Toolbar -->
+            <div class="bg-[#85beac] px-4 md:px-6 py-2.5 border-b border-[#73aa98] flex items-center justify-between text-[#092528] text-xs md:text-sm font-medium">
+                <!-- Text Formatting Actions -->
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <span class="font-semibold text-[#092528]/80 hidden sm:inline-flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-pen"></i> সম্পাদনা
+                    </span>
+                    <div class="h-4 w-[1px] bg-[#092528]/20 hidden sm:block"></div>
+                    
+                    <button onclick="changeFontSize(1)" class="p-1.5 hover:bg-[#092528]/10 rounded transition" title="ফন্ট আকার বাড়ান">
+                        <i class="fa-solid fa-font text-base"></i><i class="fa-solid fa-plus text-[10px]"></i>
+                    </button>
+                    <button onclick="changeFontSize(-1)" class="p-1.5 hover:bg-[#092528]/10 rounded transition" title="ফন্ট আকার কমান">
+                        <i class="fa-solid fa-font text-xs"></i><i class="fa-solid fa-minus text-[10px]"></i>
+                    </button>
+                    <button onclick="toggleModal('shortcutsModal')" class="p-1.5 hover:bg-[#092528]/10 rounded transition" title="শর্টকাট গাইড">
+                        <i class="fa-solid fa-keyboard"></i>
+                    </button>
+                </div>
+
+                <!-- Word & Character Counters -->
+                <div class="flex items-center space-x-3 md:space-x-5 text-xs font-semibold text-[#092528]/90">
+                    <span id="wordCountBadge" class="bg-[#092528]/10 px-2.5 py-1 rounded-full">শব্দ: ০</span>
+                    <span id="charCountBadge" class="bg-[#092528]/10 px-2.5 py-1 rounded-full">অক্ষর: ০</span>
+                </div>
+            </div>
+
+            <!-- Main Input Area -->
+            <textarea id="mainEditor" 
+                      placeholder="এখানে লিখুন" 
+                      oninput="onTextChange()"
+                      class="w-full flex-grow bg-transparent text-[#092528] placeholder-[#092528]/50 text-lg md:text-xl p-6 md:p-8 resize-none focus:outline-none leading-relaxed font-bengali font-normal select-text"
+                      spellcheck="false"
+                      autofocus></textarea>
+
+            <!-- Editor Bottom Control Bar -->
+            <div class="bg-[#8cc4b2] px-4 md:px-6 py-2 border-t border-[#73aa98] flex items-center justify-between text-xs md:text-sm text-[#092528] font-medium">
+                <div class="flex items-center space-x-2">
+                    <button onclick="copyContent()" 
+                            class="px-3 py-1.5 rounded-lg bg-[#092528]/10 hover:bg-[#092528]/20 transition flex items-center gap-1.5 font-semibold text-[#092528]">
+                        <i class="fa-regular fa-copy"></i> কপি
+                    </button>
+                    <button onclick="clearContent()" 
+                            class="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-900 transition flex items-center gap-1.5 font-semibold">
+                        <i class="fa-solid fa-trash-can"></i> পরিষ্কার করুন
+                    </button>
+                </div>
+                <div class="text-xs text-[#092528]/70 hidden md:block">
+                    স্বয়ংক্রিয় সংরক্ষণ সক্রিয়
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="w-full px-6 py-4 border-t border-white/10 bg-[#06181f]/80 flex flex-col md:flex-row items-center justify-between text-xs md:text-sm text-[#98cfbd]/80 gap-2">
+        <div class="font-medium tracking-wide">
+            সংস্করণ ০.০.১
+        </div>
+        <div class="text-center font-light">
+            &copy; 2026 REVE Systems. All Rights Reserved.
+        </div>
+        <div class="text-xs opacity-60 hidden md:block">
+            বাংলা ডিজিটাল লিখন প্ল্যাটফর্ম
+        </div>
+    </footer>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast" class="fixed bottom-16 left-1/2 transform -translate-x-1/2 bg-[#082029] text-[#98cfbd] border border-[#98cfbd]/30 px-5 py-2.5 rounded-xl shadow-2xl hidden items-center gap-2.5 z-50 text-sm font-medium animate-fade-in pointer-events-none">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-green-400"></i>
+        <span id="toastMsg">বার্তা প্রদর্শন</span>
+    </div>
+
+    <!-- PROFILE MODAL -->
+    <div id="profileModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4">
+        <div class="bg-[#0b2f33] border border-[#98cfbd]/30 rounded-2xl p-6 max-w-sm w-full shadow-2xl text-white relative animate-fade-in">
+            <button onclick="toggleModal('profileModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="flex flex-col items-center text-center">
+                <div class="w-20 h-20 rounded-full bg-[#98cfbd] text-[#082029] flex items-center justify-center text-3xl font-bold mb-3 shadow-lg">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <h3 class="text-xl font-bold text-[#98cfbd]">ব্যবহারকারী প্রোফাইল</h3>
+                <p class="text-xs text-gray-300 mt-1">সুবাক্য ব্যবহারকারী অ্যাকাউন্ট</p>
+                
+                <div class="w-full mt-6 space-y-3 text-left text-xs md:text-sm">
+                    <div class="p-3 rounded-lg bg-black/20 flex justify-between items-center">
+                        <span class="text-gray-400">স্ট্যাটাস:</span>
+                        <span class="text-green-400 font-semibold"><i class="fa-solid fa-circle text-[8px] mr-1"></i> অনলাইন</span>
+                    </div>
+                    <div class="p-3 rounded-lg bg-black/20 flex justify-between items-center">
+                        <span class="text-gray-400">লাইসেন্স:</span>
+                        <span class="text-[#98cfbd] font-medium">REVE প্রিমিয়াম সংস্করণ</span>
+                    </div>
+                    <div class="p-3 rounded-lg bg-black/20 flex justify-between items-center">
+                        <span class="text-gray-400">মোট সংরক্ষিত শব্দ:</span>
+                        <span id="totalSessionWords" class="text-white font-semibold">০</span>
+                    </div>
+                </div>
+
+                <button onclick="toggleModal('profileModal')" class="mt-6 w-full py-2 bg-[#98cfbd] text-[#082029] font-bold rounded-xl hover:bg-[#7fbaa7] transition shadow">
+                    বন্ধ করুন
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div id="settingsModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4">
+        <div class="bg-[#0b2f33] border border-[#98cfbd]/30 rounded-2xl p-6 max-w-md w-full shadow-2xl text-white relative animate-fade-in">
+            <button onclick="toggleModal('settingsModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <h3 class="text-xl font-bold text-[#98cfbd] mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-sliders"></i> সেটিংস
+            </h3>
+
+            <div class="space-y-4 text-sm">
+                <!-- Theme Option -->
+                <div class="flex justify-between items-center pb-3 border-b border-white/10">
+                    <div>
+                        <div class="font-medium">ডার্ক থিম মোড</div>
+                        <div class="text-xs text-gray-400">অ্যাপ্লিকেশনের মূল থিম পরিবর্তন</div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked disabled class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#98cfbd]"></div>
+                    </label>
+                </div>
+
+                <!-- Auto-save Toggle -->
+                <div class="flex justify-between items-center pb-3 border-b border-white/10">
+                    <div>
+                        <div class="font-medium">স্বয়ংক্রিয় সংরক্ষণ (Auto-save)</div>
+                        <div class="text-xs text-gray-400">লোকাল স্টোরেজে ড্রাফট জমাবে</div>
+                    </div>
+                    <input type="checkbox" id="autoSaveToggle" checked onchange="toggleAutoSave(this.checked)" class="w-4 h-4 accent-[#98cfbd]">
+                </div>
+
+                <!-- Default Font Size -->
+                <div class="flex justify-between items-center pb-3 border-b border-white/10">
+                    <div>
+                        <div class="font-medium">ডিফল্ট টেক্সট সাইজ</div>
+                        <div class="text-xs text-gray-400">লিখন প্যানেলের আকার নির্ধারণ</div>
+                    </div>
+                    <select onchange="setFontSizeDirect(this.value)" class="bg-[#082029] border border-white/20 text-[#98cfbd] rounded-lg px-2.5 py-1 text-xs focus:outline-none">
+                        <option value="16">ছোট (16px)</option>
+                        <option value="20" selected>সাধারণ (20px)</option>
+                        <option value="24">বড় (24px)</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="toggleModal('settingsModal')" class="mt-6 w-full py-2 bg-[#98cfbd] text-[#082029] font-bold rounded-xl hover:bg-[#7fbaa7] transition shadow">
+                সেভ ও বন্ধ করুন
+            </button>
+        </div>
+    </div>
+
+    <!-- SHORTCUTS MODAL -->
+    <div id="shortcutsModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 px-4">
+        <div class="bg-[#0b2f33] border border-[#98cfbd]/30 rounded-2xl p-6 max-w-sm w-full shadow-2xl text-white relative animate-fade-in">
+            <button onclick="toggleModal('shortcutsModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <h3 class="text-lg font-bold text-[#98cfbd] mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-keyboard"></i> কিবোর্ড শর্টকাট
+            </h3>
+            
+            <div class="space-y-2 text-xs">
+                <div class="flex justify-between p-2 bg-black/20 rounded">
+                    <span>কপি করতে:</span>
+                    <span class="font-mono text-[#98cfbd]">Ctrl + C</span>
+                </div>
+                <div class="flex justify-between p-2 bg-black/20 rounded">
+                    <span>সম্পূর্ণ সিলেক্ট:</span>
+                    <span class="font-mono text-[#98cfbd]">Ctrl + A</span>
+                </div>
+                <div class="flex justify-between p-2 bg-black/20 rounded">
+                    <span>মুছে ফেলতে:</span>
+                    <span class="font-mono text-[#98cfbd]">Alt + C</span>
+                </div>
+            </div>
+
+            <button onclick="toggleModal('shortcutsModal')" class="mt-5 w-full py-2 bg-[#98cfbd] text-[#082029] font-semibold rounded-xl hover:bg-[#7fbaa7] transition">
+                বুঝেছি
+            </button>
+        </div>
+    </div>
+
+    <!-- LOGIC SCRIPT -->
+    <script>
+        let currentFontSize = 20;
+        let isAutoSaveEnabled = true;
+
+        // Bengali Digits Helper
+        function toBengaliNumerals(n) {
+            const bengaliDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+            return n.toString().replace(/\d/g, digit => bengaliDigits[digit]);
+        }
+
+        // Live stats counter
+        function onTextChange() {
+            const editor = document.getElementById('mainEditor');
+            const val = editor.value;
+            
+            const charCount = val.length;
+            const wordCount = val.trim() === '' ? 0 : val.trim().split(/\s+/).length;
+
+            document.getElementById('charCountBadge').innerText = `অক্ষর: ${toBengaliNumerals(charCount)}`;
+            document.getElementById('wordCountBadge').innerText = `শব্দ: ${toBengaliNumerals(wordCount)}`;
+
+            // Auto-save
+            if (isAutoSaveEnabled) {
+                localStorage.setItem('subakya_draft', val);
+            }
+
+            // Update session word count in profile
+            document.getElementById('totalSessionWords').innerText = toBengaliNumerals(wordCount);
+        }
+
+        // Copy content function
+        function copyContent() {
+            const editor = document.getElementById('mainEditor');
+            if (!editor.value.trim()) {
+                openToast('কপি করার জন্য কোনো টেক্সট নেই', 'error');
+                return;
+            }
+            
+            editor.select();
+            try {
+                // Compatible fallback for copy command
+                document.execCommand('copy');
+                openToast('ক্লিপবোর্ডে কপি করা হয়েছে!');
+            } catch (err) {
+                openToast('কপি করতে সমস্যা হয়েছে', 'error');
+            }
+        }
+
+        // Clear Content function
+        function clearContent() {
+            const editor = document.getElementById('mainEditor');
+            if (!editor.value) return;
+            
+            editor.value = '';
+            onTextChange();
+            openToast('ক্যানভাস পরিষ্কার করা হয়েছে');
+        }
+
+        // Font Size Adjustments
+        function changeFontSize(delta) {
+            currentFontSize = Math.min(Math.max(currentFontSize + (delta * 2), 14), 36);
+            document.getElementById('mainEditor').style.fontSize = `${currentFontSize}px`;
+        }
+
+        function setFontSizeDirect(px) {
+            currentFontSize = parseInt(px);
+            document.getElementById('mainEditor').style.fontSize = `${currentFontSize}px`;
+        }
+
+        // Modal Handler
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } else {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }
+        }
+
+        // Auto Save Setting Toggle
+        function toggleAutoSave(enabled) {
+            isAutoSaveEnabled = enabled;
+            if (enabled) {
+                openToast('স্বয়ংক্রিয় সংরক্ষণ সক্রিয় করা হলো');
+            } else {
+                openToast('স্বয়ংক্রিয় সংরক্ষণ নিষ্ক্রিয় করা হলো', 'error');
+            }
+        }
+
+        // Custom Toast Notification System
+        let toastTimeout;
+        function openToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMsg.innerText = msg;
+
+            if (type === 'error') {
+                toastIcon.className = 'fa-solid fa-circle-exclamation text-red-400';
+            } else {
+                toastIcon.className = 'fa-solid fa-circle-check text-green-400';
+            }
+
+            toast.classList.remove('hidden');
+            toast.classList.add('flex');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('flex');
+                toast.classList.add('hidden');
+            }, 2600);
+        }
+
+        // Keyboard Shortcut Listeners
+        document.addEventListener('keydown', function(e) {
+            if (e.altKey && (e.key === 'c' || e.key === 'C')) {
+                e.preventDefault();
+                clearContent();
+            }
+        });
+
+        // Initialize saved draft on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedDraft = localStorage.getItem('subakya_draft');
+            if (savedDraft) {
+                document.getElementById('mainEditor').value = savedDraft;
+                onTextChange();
+            }
+        });
+    </script>
+</body>
+</html>
